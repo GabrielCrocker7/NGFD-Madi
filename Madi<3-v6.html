@@ -29,10 +29,10 @@
     }
 
     .container {
-      padding: 40px 20px 100px;
+      padding: 40px 20px 60px;
       max-width: 1200px;
-      margin: auto;
-      background: rgba(255,255,255,0.9);
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
       box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
@@ -46,12 +46,19 @@
       font-size: 1.2em;
     }
 
+    .carousel-wrapper {
+      position: relative;
+      margin: 30px 0;
+    }
+
     .carousel {
       overflow-x: auto;
       scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
       display: flex;
-      gap: 40px;
+      gap: 30px;
       padding: 20px 0;
+      scrollbar-width: thin;
     }
 
     .carousel-item {
@@ -65,27 +72,43 @@
 
     .carousel-item img {
       width: 100%;
+      display: block;
       border-radius: 15px;
       border: 6px solid #ff1493;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
 
-    .special-border img {
-      border-color: #ff69b4;
-      box-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+    /* Scroll Prompt Arrow for First Photo */
+    .scroll-prompt {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      background: rgba(255, 20, 147, 0.85);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8em;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 10;
     }
 
-    .highlight-label {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(255, 20, 147, 0.9);
-      color: white;
-      padding: 5px 10px;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 1em;
-      font-family: 'Pacifico', cursive;
+    .scroll-prompt.active {
+      opacity: 1;
+      animation: pulse-arrow 1.5s infinite;
+    }
+
+    @keyframes pulse-arrow {
+      0% { transform: translateY(-50%) scale(1); box-shadow: 0 0 15px rgba(255, 105, 180, 0.8); }
+      50% { transform: translateY(-50%) scale(1.15); box-shadow: 0 0 25px rgba(255, 20, 147, 1); }
+      100% { transform: translateY(-50%) scale(1); box-shadow: 0 0 15px rgba(255, 105, 180, 0.8); }
     }
 
     footer {
@@ -96,6 +119,7 @@
       font-family: 'Pacifico', cursive;
     }
 
+    /* Falling Hearts Animation Overlay */
     .falling-hearts {
       position: fixed;
       top: 0;
@@ -112,7 +136,8 @@
       color: #ff1493;
       overflow: hidden;
       opacity: 1;
-      transition: opacity 5s ease-out;
+      transition: opacity 2s ease-out;
+      pointer-events: none;
     }
 
     .falling-hearts.show {
@@ -124,10 +149,11 @@
     }
 
     .falling-hearts .message {
-      z-index: 1;
+      z-index: 1001;
       font-family: 'Pacifico', cursive;
       color: #ff1493;
       text-shadow: 0 0 15px rgba(255, 105, 180, 0.8);
+      max-width: 80%;
     }
 
     .falling-heart {
@@ -144,13 +170,14 @@
       100% { top: 100vh; opacity: 0; }
     }
 
+    /* Poem Popup Modal */
     .poem-popup {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(255, 240, 245, 0.97);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 9999;
       display: flex;
       justify-content: center;
@@ -159,15 +186,36 @@
     }
 
     .scroll-container {
-      background: white;
+      background: #fff0f5;
+      border: 3px solid #ff1493;
       border-radius: 20px;
       padding: 30px;
       width: 90%;
-      max-width: 700px;
-      max-height: 90vh;
+      max-width: 650px;
+      max-height: 85vh;
       overflow-y: auto;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       text-align: left;
+      position: relative;
+    }
+
+    /* Pink X Close Button */
+    .close-x {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: #ff1493;
+      font-size: 1.8em;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Roboto', sans-serif;
+      transition: transform 0.2s ease;
+    }
+
+    .close-x:hover {
+      transform: scale(1.2);
     }
 
     .poem-title {
@@ -190,21 +238,12 @@
       font-size: 1.1em;
       color: #ff1493;
     }
-
-    .poem button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #ff1493;
-      border: none;
-      color: white;
-      border-radius: 8px;
-      font-size: 1em;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
+
   <header>Happy National Girlfriends Day, Madi!</header>
+
   <div class="container">
     <div class="message">
       <h2>To My Beautiful Girlfriend, Madi</h2>
@@ -213,111 +252,177 @@
         Every moment with you is a treasured memory, and I look forward to making many more. You mean the world to me!
       </p>
     </div>
-    <div class="carousel-inner carousel">
-      <!-- New highlighted photo 1 -->
-      <div class="carousel-item special-border">
-        <img src="https://www.dropbox.com/scl/fi/rn0nf0ug92zmmuuprryk3/IMG_9209.jpeg?rlkey=3z0ox4rzoz6bkc582w8pqobb8&st=hdt31lmb&raw=1" alt="Favorite Photo">
-        <div class="highlight-label">My favorite photo of us</div>
-      </div>
 
-      <!-- New highlighted photo 2 -->
-      <div class="carousel-item special-border">
-        <img src="https://www.dropbox.com/scl/fi/z9dc5ysihy4hgl5aykiw7/IMG_3204.jpeg?rlkey=38wescwftsij3kjg4cnfrqmhq&st=ng57s0gf&raw=1" alt="Our Cutest">
-        <div class="highlight-label">Our cutest</div>
-      </div>
-
-      <!-- New highlighted photo 3 -->
-      <div class="carousel-item special-border">
-        <img src="https://www.dropbox.com/scl/fi/2bilan6rad9fzxj1wjalt/IMG_7196.jpeg?rlkey=jkuu95zx3090h8ppirxumxpgh&st=0igv8881&raw=1" alt="Salt Springs">
-        <div class="highlight-label">Salt Springs fun 💧</div>
-      </div>
-
-      <!-- Existing carousel images (example) -->
-      <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/4v6trwzcn1t0sweabl82t/IMG_8814.jpeg?rlkey=9k9dzygqfyzedyzarpivj0ice&raw=1" alt="Photo 1">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/vkfk7a7l5knchhuog3u2m/IMG_3960.jpeg?rlkey=uqiuagp2c24buyrw6jao4sp1x&raw=1" alt="Photo 2">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/div2fbw9rl0c7kjb8qmtk/IMG_4023.jpeg?rlkey=krlpehwjeggc4mscec4s06n9h&raw=1" alt="Photo 3">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/84cs2eh7g0nrdw3efbpxq/IMG_7745.jpeg?rlkey=i0wwq0ysvh08rl1a4kkjxz517&raw=1" alt="Photo 4">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/tfs8i3fycqgg7vnpgundp/IMG_6587.jpeg?rlkey=f5gmxk38crx7z9mk2lpuefjwy&raw=1" alt="Photo 5">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/lrx0l6v4tzeuri3lu079y/IMG_8224.jpeg?rlkey=dgg0r0vhwj0loojr75n22do2q&raw=1" alt="Photo 6">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/42il757zdvwahsb80qkmj/Snapchat-1464861716.jpeg?rlkey=esx78etj44973ecrypiw4qr34&raw=1" alt="Photo 7">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/1i7obn4y7cn4b4ygrhtl8/IMG_4658.jpeg?rlkey=vnyrszi5x3nlcyjlwhixbfvc9&raw=1" alt="Photo 8">
-                </div>
-                <div class="carousel-item">
-                    <img src="https://www.dropbox.com/scl/fi/bpg0jjne5m1jeryju87kr/IMG_3946.jpeg?rlkey=8q74dbudlouikxlvk42y3on6r&raw=1" alt="Photo 9">
-                </div>
-                <div class="carousel-item special-border">
-                    <img src="https://www.dropbox.com/scl/fi/y0hx0ze6y6iafpd2qtd3r/IMG_4619.jpeg?rlkey=2va54yvc29xovumv4z4tfklw9&raw=1" alt="Photo 10">
-                </div>
-            </div>
+    <div class="carousel-wrapper">
+      <div class="carousel-inner carousel">
+        <!-- Mixed Photos & New Additions (Captions removed, 'our cutest' reserved for the end) -->
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/rn0nf0ug92zmmuuprryk3/IMG_9209.jpeg?rlkey=3z0ox4rzoz6bkc582w8pqobb8&st=hdt31lmb&raw=1" alt="Photo">
         </div>
-</div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/sfgj9wft8xehyk8c74omq/80595127992__1E6A0816-D96C-45C7-8443-FFACF7CAB0C7.jpeg?rlkey=fox37qzx6y5lm6gwipq16p4rb&st=gsydbuw9&raw=1" alt="New Photo 1">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/2bilan6rad9fzxj1wjalt/IMG_7196.jpeg?rlkey=jkuu95zx3090h8ppirxumxpgh&st=0igv8881&raw=1" alt="Salt Springs">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/o2jwd90srqzcbzw0ipqgf/IMG_1925.jpeg?rlkey=r3oy2uohc60b7pswh12g5umjr&st=t7sy13sn&raw=1" alt="New Photo 2">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/4v6trwzcn1t0sweabl82t/IMG_8814.jpeg?rlkey=9k9dzygqfyzedyzarpivj0ice&raw=1" alt="Photo">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/tikzmv779mdv3w3lqqmlo/IMG_3041.jpeg?rlkey=ol4daftcedt5qufc0xpmd87gc&st=83p9t7hr&raw=1" alt="New Photo 3">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/div2fbw9rl0c7kjb8qmtk/IMG_4023.jpeg?rlkey=krlpehwjeggc4mscec4s06n9h&raw=1" alt="Photo">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/e7yazc4vbbhx4sp82ci0n/IMG_3423.jpeg?rlkey=rqn8n321ajbyeri4b9sv1fk8m&st=8d16dqo6&raw=1" alt="New Photo 4">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/tfs8i3fycqgg7vnpgundp/IMG_6587.jpeg?rlkey=f5gmxk38crx7z9mk2lpuefjwy&raw=1" alt="Photo">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/tf59y7xtr8t9algxvl7ta/IMG_3929.jpeg?rlkey=303y47dsu4gwwm0uhduz5v27k&st=ufdf17ck&raw=1" alt="New Photo 5">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/42il757zdvwahsb80qkmj/Snapchat-1464861716.jpeg?rlkey=esx78etj44973ecrypiw4qr34&raw=1" alt="Photo">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/bjmyhf1nu93pznvw3ooqy/IMG_4057.jpeg?rlkey=82blcv73swdnkwgzv71quedvc&st=r45xk25h&raw=1" alt="New Photo 6">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/bpg0jjne5m1jeryju87kr/IMG_3946.jpeg?rlkey=8q74dbudlouikxlvk42y3on6r&raw=1" alt="Photo">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/hxgsdjyrsxhqi3ac5ovjy/IMG_4101.jpeg?rlkey=bd7ql2zwd2ghbdzxiv5do0khj&st=pujjohgf&raw=1" alt="New Photo 7">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/6pufv7np2rnlf9w452rt0/IMG_4336.jpeg?rlkey=0cro4e5wl9jq6wpm9qquerwu7&st=5jgwm0gq&raw=1" alt="New Photo 8">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/tfzaoagfbhf25esbrc369/IMG_4375.jpeg?rlkey=a2igfbncdn034a5ldtttqbh5p&st=a7s1qz95&raw=1" alt="New Photo 9">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/993o2wreadu0i4bcxsm8r/IMG_4388.jpeg?rlkey=rszg9gt5xhmz2hsirkbyze6ox&st=or3zljqm&raw=1" alt="New Photo 10">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/5mh5bfbq0oen74oyjjlw5/IMG_5594.jpeg?rlkey=vk3hlduog6ruovx0a75cm1lj9&st=cox9z7mw&raw=1" alt="New Photo 11">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/r99obwmvfasg9p8fqq3ja/IMG_7059.jpeg?rlkey=evi30uaohnqz1hucgj3u2k8wa&st=sdizzztu&raw=1" alt="New Photo 12">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/fxs7ddrcrfk6e3pcj71w3/IMG_7532.jpeg?rlkey=qwn7el2yhrluwuladrb6cair8&st=0dbbkhir&raw=1" alt="New Photo 13">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/6ea18nuhodau5gib9pl63/IMG_8395.jpeg?rlkey=73mqk1lt21pvasiiqlkgzl7he&st=mlxinm9g&raw=1" alt="New Photo 14">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/1vl41n2g3h6ecfe1kyygm/IMG_8654.jpeg?rlkey=87qmwaqva9r2srnjtrqefhng4&st=305wjfwl&raw=1" alt="New Photo 15">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/d4ybyr597qx1gayt47gbq/IMG_8921.jpeg?rlkey=az0o6cuy3dfl3jd9btsa4sbi7&st=skiipec8&raw=1" alt="New Photo 16">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/sodzum0h7d5elmehjtamo/IMG_8922.jpeg?rlkey=ceim8dglyqnqfx2uctyery4ls&st=vgvz6ny8&raw=1" alt="New Photo 17">
+        </div>
+        <div class="carousel-item">
+          <img src="https://www.dropbox.com/scl/fi/h834ltgtmsg94e9cvjlgz/IMG_8931.jpeg?rlkey=842zchkrapv4hr4naw7200syy&st=rszrwzu2&raw=1" alt="New Photo 18">
+        </div>
+        <!-- "Our Cutest" designated as the final photo -->
+        <div class="carousel-item special-border">
+          <img src="https://www.dropbox.com/scl/fi/z9dc5ysihy4hgl5aykiw7/IMG_3204.jpeg?rlkey=38wescwftsij3kjg4cnfrqmhq&st=ng57s0gf&raw=1" alt="Our Cutest">
+        </div>
+      </div>
+      <!-- Pulsing scroll prompt arrow for the first photo -->
+      <div class="scroll-prompt" id="scrollPrompt">&#10095;</div>
+    </div>
 
-    <div class="final-message">Looking forward to many more special days with you!<br><br><strong>I truly am the luckiest boyfriend.</strong></div>
+    <div class="final-message">
+      Looking forward to many more special days with you!<br><br>
+      <strong>I truly am the luckiest boyfriend.</strong>
+    </div>
   </div>
 
   <footer>
     <p>Created with love for Madi</p>
   </footer>
 
-  <!-- Falling Hearts Animation -->
+  <!-- Falling Hearts Animation Overlay -->
   <div class="falling-hearts" id="fallingHearts">
     <div class="message">
       Another year with you has flown by, with so many ups and downs, it really has been a ride. You are loved Madi.
     </div>
   </div>
 
-  <!-- Poem Popup -->
+  <!-- Poem Popup Modal -->
   <div class="poem-popup" id="poemPopup">
     <div class="scroll-container">
+      <button class="close-x" onclick="closePoem()">&times;</button>
       <div class="poem-title">August 1st, 2025</div>
       <div class="poem">
-        <p>TRUE<br>
-        <p>What was that secret feeling none could know?<br>
-        A fool I’d be, to claim that apple’s eye,<br>
-        That myth, that art, a fable yet to show,<br>
-        But cools my heart, each time I hear her cry.</p>
-
-        <p>To take for all there is, today is gold.<br>
-        Yet flaw is virtue too, adored a while,<br>
-        So fool I’ll be, to wrap her when she’s cold,<br>
-        And stake in awe, its worth for just her smile.</p>
-
-        <p>To see her world, I’d sought, but lit a fire,<br>
-        (Sick hearts like mine are seldom truly sane),<br>
-        And watched, as she’d become my own entire.<br>
-        For all she is, I pick to end this feign.</p>
-
-        <p>In all my thoughts of course, that <em></em><i>her</i></em> is you,<br>
-        I know not what you’ll say, but know that this is true.</p>
-
+        <p><strong>TRUE</strong></p>
+        <p>
+          What was that secret feeling none could know?<br>
+          A fool I’d be, to claim that apple’s eye,<br>
+          That myth, that art, a fable yet to show,<br>
+          But cools my heart, each time I hear her cry.
+        </p>
+        <p>
+          To take for all there is, today is gold.<br>
+          Yet flaw is virtue too, adored a while,<br>
+          So fool I’ll be, to wrap her when she’s cold,<br>
+          And stake in awe, its worth for just her smile.
+        </p>
+        <p>
+          To see her world, I’d sought, but lit a fire,<br>
+          (Sick hearts like mine are seldom truly sane),<br>
+          And watched, as she’d become my own entire.<br>
+          For all she is, I pick to end this feign.
+        </p>
+        <p>
+          In all my thoughts of course, that <em>her</em> is you,<br>
+          I know not what you’ll say, but know that this is true.
+        </p>
         <div class="poem-footer">To THE Madilyn Swavola, love Gabe Crocker</div>
-        <button onclick="document.getElementById('poemPopup').style.display='none'">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- JavaScript -->
   <script>
+    function closePoem() {
+      document.getElementById('poemPopup').style.display = 'none';
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const carousel = document.querySelector('.carousel-inner');
       const fallingHearts = document.getElementById('fallingHearts');
       const lastItem = document.querySelector('.carousel-item:last-child');
+      const poemPopup = document.getElementById('poemPopup');
+      const scrollPrompt = document.encode || document.getElementById('scrollPrompt');
       const totalHearts = 50;
+
+      // Close modal when clicking outside content backdrop
+      poemPopup.addEventListener('click', (e) => {
+        if (e.target === poemPopup) {
+          closePoem();
+        }
+      });
+
+      // 5-second inactivity scroll prompt timer for first photo
+      let promptTimer = setTimeout(() => {
+        if (carousel.scrollLeft === 0) {
+          document.getElementById('scrollPrompt').classList.add('active');
+        }
+      }, 5000);
+
+      // Hide prompt and clear timer once scrolling starts
+      carousel.addEventListener('scroll', () => {
+        clearTimeout(promptTimer);
+        document.getElementById('scrollPrompt').classList.remove('active');
+      });
 
       function createFallingHearts() {
         for (let i = 0; i < totalHearts; i++) {
@@ -337,10 +442,13 @@
         const scrollPosition = carousel.scrollLeft + carousel.clientWidth;
         const lastItemPosition = lastItem.offsetLeft + lastItem.clientWidth;
 
-        if (scrollPosition >= lastItemPosition - 10 && !animationPlayed) {
+        if (scrollPosition >= lastItemPosition - 30 && !animationPlayed) {
           fallingHearts.classList.add('show');
           setTimeout(() => {
             fallingHearts.classList.add('fade-out');
+            setTimeout(() => {
+              fallingHearts.classList.remove('show');
+            }, 2000);
           }, 5000);
           animationPlayed = true;
         }
@@ -348,11 +456,6 @@
 
       carousel.addEventListener('scroll', checkScroll);
     });
-
-    // Show poem on load
-    window.onload = () => {
-      document.getElementById('poemPopup').style.display = 'flex';
-    };
   </script>
 </body>
 </html>
