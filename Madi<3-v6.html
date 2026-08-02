@@ -38,16 +38,14 @@
       color: var(--ivory);
       overflow-x: hidden;
       position: relative;
-      /* Fixed for mobile infinite scroll bug */
       overscroll-behavior-y: none;
     }
 
-    /* Used via JS to lock body scrolling when popup is open */
     body.modal-open { overflow: hidden; }
 
     /* --- PAGE CONTAINERS --- */
     #landing-page { transition: opacity 1s ease; }
-    #poems-page { display: none; opacity: 0; transition: opacity 2s ease; }
+    #poems-page { display: none; opacity: 0; transition: opacity 1.5s ease; }
 
     /* --- DARK THEME BACKGROUNDS (Landing) --- */
     #landing-page::before {
@@ -193,9 +191,9 @@
     .falling-heart { position: absolute; font-size: clamp(16px, 4vw, 24px); color: var(--rose-gold); text-shadow: 0 0 12px rgba(232, 180, 184, 0.8); animation: float-down 10s linear infinite; z-index: 999; }
     @keyframes float-down { 0% { top: -10%; opacity: 1; transform: rotate(0deg) translateX(0); } 50% { transform: rotate(180deg) translateX(20px); } 100% { top: 110%; opacity: 0; transform: rotate(360deg) translateX(-20px); } }
 
-    /* --- REFINED POEM POPUP (Fixes applied) --- */
+    /* --- REFINED POEM POPUP --- */
     .poem-popup {
-      position: fixed; top: 0; left: 0; bottom: 0; right: 0; /* Ensures true boundaries on mobile */
+      position: fixed; top: 0; left: 0; bottom: 0; right: 0;
       background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 9999;
       display: flex; justify-content: center; align-items: center;
       visibility: hidden; opacity: 0; transition: opacity 0.5s ease, visibility 0.5s;
@@ -205,8 +203,8 @@
       background: var(--ivory); border: clamp(4px, 1vw, 8px) solid var(--antique-gold);
       outline: 2px dashed var(--rose-gold); outline-offset: -10px; border-radius: 12px;
       padding: clamp(30px, 6vw, 50px) clamp(20px, 5vw, 40px); width: 92%; max-width: 600px;
-      max-height: 85%; /* Using % instead of vh prevents issues on mobile browsers */
-      overflow-y: auto; overscroll-behavior: contain; /* CRITICAL FIX: prevents passing scroll to body */
+      max-height: 85vh;
+      overflow-y: auto; overscroll-behavior: contain;
       box-shadow: 0 20px 60px rgba(0,0,0,0.9); text-align: left; position: relative;
       color: var(--plum-velvet); font-family: 'Cormorant Garamond', serif; opacity: 0; 
     }
@@ -221,47 +219,94 @@
     .poem p { margin-bottom: 20px; font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.6; }
     .poem strong { display: block; text-align: center; font-size: clamp(1.2rem, 4.5vw, 1.5rem); letter-spacing: 4px; color: var(--antique-gold); margin-bottom: 15px; }
     
-    /* Footnote specific style */
     .poem-footnote {
       font-size: 0.9rem; font-style: italic; color: #666; text-align: center; 
       margin-top: 20px; border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 15px;
     }
 
-    /* --- FOOTER & EASTER EGG --- */
+    /* --- FOOTER & EASTER EGG (Fixed No-Collision Layout) --- */
     .footer-container {
-      position: relative; display: flex; align-items: center; justify-content: center;
-      padding: 40px 15px; color: var(--rose-gold); font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.5rem, 5vw, 2rem); z-index: 10; width: 100%; max-width: 1200px; margin: 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 20px 40px;
+      color: var(--rose-gold);
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      z-index: 10;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .footer-devotion-text {
+      margin: 0 auto;
+      padding-bottom: 20px;
+      z-index: 10;
     }
     
     .easter-egg-wrapper {
-      position: absolute; left: 15px; bottom: 30px; display: flex; align-items: flex-end; gap: 10px;
-      cursor: pointer; z-index: 50; transition: transform 0.3s ease;
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      cursor: pointer;
+      z-index: 50;
+      transition: transform 0.3s ease;
     }
-    .easter-egg-wrapper:hover { transform: scale(1.05); }
+    .easter-egg-wrapper:hover { transform: scale(1.08); }
     
     .easter-egg-text {
-      font-family: 'Dancing Script', cursive; font-size: clamp(1rem, 3.5vw, 1.3rem);
-      color: var(--antique-gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
-      transform: rotate(-10deg); margin-bottom: 15px;
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(0.95rem, 3.2vw, 1.25rem);
+      color: var(--antique-gold);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+      transform: rotate(-8deg);
+      margin-bottom: 12px;
+      white-space: nowrap;
     }
-    .easter-egg-arrow { font-size: 1.5rem; color: var(--rose-gold); transform: rotate(90deg); margin-bottom: 20px; }
-    .easter-egg-balloon { font-size: 2.5rem; text-shadow: 0 5px 15px rgba(232, 180, 184, 0.5); transform-origin: bottom center; animation: balloon-float 3s ease-in-out infinite alternate; }
+    .easter-egg-arrow { font-size: 1.3rem; color: var(--rose-gold); transform: rotate(90deg); margin-bottom: 15px; }
+    .easter-egg-balloon { font-size: 2.3rem; text-shadow: 0 5px 15px rgba(232, 180, 184, 0.5); transform-origin: bottom center; animation: balloon-float 3s ease-in-out infinite alternate; }
     
     @keyframes balloon-float { 0% { transform: translateY(0) rotate(-2deg); } 100% { transform: translateY(-10px) rotate(2deg); } }
     
     /* Easter Egg Burst Animation Classes */
-    .balloon-burst { animation: burst-up 1s cubic-bezier(0.5, 0, 1, 1) forwards !important; }
-    @keyframes burst-up { 0% { transform: scale(1) translateY(0); opacity: 1; } 50% { transform: scale(1.2) translateY(-50px); opacity: 1; filter: brightness(2); } 100% { transform: scale(3) translateY(-150px); opacity: 0; filter: brightness(5); } }
+    .balloon-burst { animation: burst-up 0.9s cubic-bezier(0.5, 0, 1, 1) forwards !important; }
+    @keyframes burst-up { 0% { transform: scale(1) translateY(0); opacity: 1; } 50% { transform: scale(1.3) translateY(-50px); opacity: 1; filter: brightness(2); } 100% { transform: scale(3.5) translateY(-180px); opacity: 0; filter: brightness(5); } }
 
-    /* --- SUPERNOVA TRANSITION OVERLAY --- */
-    #supernova-screen {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: radial-gradient(circle at 20% 80%, #FFF, #FDF7F2 30%, #E8B4B8 60%, transparent 100%);
-      z-index: 20000; opacity: 0; pointer-events: none; mix-blend-mode: screen;
-      transition: opacity 1.5s cubic-bezier(0.4, 0, 1, 1);
+    /* --- EXTRAVAGANT CINEMATIC SUPERNOVA EXPLOSION --- */
+    #supernovaCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 20000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
-    #supernova-screen.explode { opacity: 1; pointer-events: all; background: #FFF; box-shadow: inset 0 0 100px 50px rgba(255, 255, 255, 0.9); }
+    #supernovaCanvas.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #supernova-flare {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 20001;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle at center, #FFFFFF 0%, #FFF8F0 40%, #E8B4B8 70%, #D4AF37 100%);
+      transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    #supernova-flare.flash {
+      opacity: 1;
+    }
 
     /* --- NEW LIGHT PAGE: POEMS ARCHIVE --- */
     #poems-page {
@@ -270,7 +315,7 @@
         radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.8) 0%, transparent 40%),
         radial-gradient(circle at 90% 90%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
         repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.3) 10px, rgba(255, 255, 255, 0.3) 20px);
-      min-height: 100vh; color: var(--dark-plum); padding: 60px 15px; position: relative; z-index: 10;
+      min-height: 100vh; color: var(--dark-plum); padding: 60px 15px 140px; position: relative; z-index: 10;
     }
     
     .poems-header { text-align: center; margin-bottom: 60px; }
@@ -297,30 +342,82 @@
     .poem-title-text { margin: 0 0 25px 0; font-size: clamp(1.5rem, 5vw, 2.2rem); }
     .poem-body { font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.8; white-space: pre-wrap; }
 
-    /* Style 1: TRUE & TO GROW A HEART (Classic, Romantic) */
+    /* Style 1: TRUE & TO GROW A HEART */
     .style-classic { text-align: center; font-family: 'Cormorant Garamond', serif; border: 1px solid var(--blush-pink); }
     .style-classic .poem-title-text { color: var(--warm-gold); font-family: 'Cinzel', serif; letter-spacing: 4px; }
     
-    /* Style 2: ODE TO IRIS (Elegant, Flowing) */
+    /* Style 2: ODE TO IRIS */
     .style-elegant { text-align: left; font-family: 'Playfair Display', serif; border-left: 4px solid var(--warm-gold); border-radius: 0 12px 12px 0; }
     .style-elegant .poem-title-text { font-family: 'Great Vibes', cursive; font-size: clamp(2rem, 6vw, 3rem); color: var(--dark-plum); }
 
-    /* Style 3: REVERIE UPON A HILL (Light, Dreamy) */
+    /* Style 3: REVERIE UPON A HILL */
     .style-dreamy { text-align: center; font-family: 'Lato', sans-serif; font-weight: 300; font-style: italic; background: transparent; box-shadow: none; border-top: 1px dashed var(--warm-gold); border-bottom: 1px dashed var(--warm-gold); border-radius: 0; }
     .style-dreamy .poem-title-text { font-family: 'Lato', sans-serif; font-weight: 400; letter-spacing: 3px; color: var(--warm-gold); }
 
-    /* Style 4: ODE OF AVARICE & KILLERS (Darker, Intense) */
+    /* Style 4: ODE OF AVARICE & KILLERS */
     .style-dark { text-align: justify; font-family: 'Cinzel', serif; background: var(--dark-plum); color: var(--champagne); box-shadow: 0 20px 40px rgba(42, 17, 51, 0.4); }
     .style-dark .poem-date { color: var(--warm-gold); }
     .style-dark .poem-title-text { color: var(--blush-pink); text-shadow: 0 0 10px rgba(244, 211, 214, 0.3); }
 
-    /* Style 5: FAREWELL FAIR (Playful, Cursive) */
+    /* Style 5: FAREWELL FAIR */
     .style-playful { text-align: center; font-family: 'Dancing Script', cursive; font-size: clamp(1.3rem, 5vw, 1.6rem); border: 2px dotted var(--blush-pink); }
     .style-playful .poem-title-text { font-family: 'Playfair Display', serif; color: var(--warm-gold); font-style: italic; }
 
-    /* Style 6: PRIORITY (Modern, Clean) */
+    /* Style 6: PRIORITY */
     .style-modern { text-align: left; font-family: 'Lato', sans-serif; border-radius: 0; border-bottom: 4px solid var(--dark-plum); }
     .style-modern .poem-title-text { font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px; color: var(--dark-plum); text-transform: uppercase; }
+
+    /* --- END OF POEMS PAGE FOOTNOTE & RETURN BALLOON --- */
+    .poems-page-footer {
+      max-width: 900px;
+      margin: 80px auto 0;
+      text-align: center;
+      position: relative;
+      padding: 40px 20px 30px;
+      border-top: 1px solid rgba(184, 144, 46, 0.3);
+    }
+
+    .poems-footnote-text {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.2rem, 7vw, 3.5rem);
+      color: var(--warm-gold);
+      text-shadow: 0 2px 10px rgba(184, 144, 46, 0.2);
+    }
+
+    .return-egg-wrapper {
+      position: absolute;
+      right: 20px;
+      bottom: 10px;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      cursor: pointer;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .return-egg-wrapper:hover { transform: scale(1.08); }
+
+    .return-egg-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(0.95rem, 3.2vw, 1.25rem);
+      color: var(--warm-gold);
+      text-shadow: 0 0 10px rgba(184, 144, 46, 0.4);
+      transform: rotate(8deg);
+      margin-bottom: 12px;
+      white-space: nowrap;
+    }
+    .return-egg-arrow {
+      font-size: 1.3rem;
+      color: var(--dark-plum);
+      transform: rotate(-90deg);
+      margin-bottom: 15px;
+    }
+    .return-egg-balloon {
+      font-size: 2.3rem;
+      text-shadow: 0 5px 15px rgba(244, 211, 214, 0.8);
+      transform-origin: bottom center;
+      animation: balloon-float 3s ease-in-out infinite alternate;
+    }
 
   </style>
 </head>
@@ -391,14 +488,14 @@
       </div>
     </div>
 
-    <!-- Footer + Easter Egg -->
+    <!-- Footer + Easter Egg (Updated Layout) -->
     <div class="footer-container">
+      <div class="footer-devotion-text">Created with devotion for Madi</div>
       <div class="easter-egg-wrapper" id="easterEggTrigger">
         <div class="easter-egg-text">click here for a surprise!</div>
         <div class="easter-egg-arrow">⤹</div>
         <div class="easter-egg-balloon" id="eggBalloon">🎈</div>
       </div>
-      <div>Created with devotion for Madi</div>
     </div>
   </div>
 
@@ -409,11 +506,12 @@
     </div>
   </div>
 
-  <!-- Poem Popup Modal (Fixed infinite scroll + New text) -->
+  <!-- Poem Popup Modal -->
   <div class="poem-popup" id="poemPopup">
     <div class="scroll-container glitter-sweep">
       <button class="close-x" onclick="closePoem()">&times;</button>
-      <div class="poem-title">August 1st, 2025</div>
+      <!-- Edited Date to May 5th, 2025 -->
+      <div class="poem-title">May 5th, 2025</div>
       <div class="poem">
         <p><strong>LOST LOTUS LULLABY</strong></p>
         <p>
@@ -440,7 +538,6 @@
         </p>
         <div class="poem-footer">To my beloved Madilyn Swavola,<br>love Gabe Crocker</div>
         
-        <!-- Requested Footnote -->
         <div class="poem-footnote">
           *This was the very first poem I’d written dedicated to you.
         </div>
@@ -448,8 +545,9 @@
     </div>
   </div>
 
-  <!-- Supernova Transition Element -->
-  <div id="supernova-screen"></div>
+  <!-- Cinematic Supernova Elements -->
+  <canvas id="supernovaCanvas"></canvas>
+  <div id="supernova-flare"></div>
 
   <!-- NEW PAGE: Poems Archive -->
   <div id="poems-page">
@@ -462,7 +560,8 @@
       
       <!-- Poem 1: TRUE -->
       <div class="poem-card style-classic">
-        <div class="poem-date">8/1/25</div>
+        <!-- Edited Date to 5/5/25 -->
+        <div class="poem-date">5/5/25</div>
         <h3 class="poem-title-text">TRUE</h3>
         <div class="poem-body">What was that secret feeling none could know?
 A fool I’d be, to claim that apple’s eye,
@@ -628,6 +727,16 @@ The question then becomes, what priority’s the lover?</div>
       </div>
       
     </div>
+
+    <!-- NEW FOOTNOTE & RETURN BALLOON TUCKED RIGHT -->
+    <div class="poems-page-footer">
+      <div class="poems-footnote-text">I love you bb 😘</div>
+      <div class="return-egg-wrapper" id="returnEggTrigger">
+        <div class="return-egg-text">back to beginning</div>
+        <div class="return-egg-arrow">⤹</div>
+        <div class="return-egg-balloon">🎈</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -638,21 +747,23 @@ The question then becomes, what priority’s the lover?</div>
     const landingPage = document.getElementById('landing-page');
     const poemsPage = document.getElementById('poems-page');
     const easterEggTrigger = document.getElementById('easterEggTrigger');
+    const returnEggTrigger = document.getElementById('returnEggTrigger');
     const eggBalloon = document.getElementById('eggBalloon');
-    const supernova = document.getElementById('supernova-screen');
+    const supernovaCanvas = document.getElementById('supernovaCanvas');
+    const supernovaFlare = document.getElementById('supernova-flare');
 
     // On page load, trigger the poem to glitter in & lock body scroll
     window.addEventListener('load', () => {
       setTimeout(() => {
         poemPopup.classList.add('show');
         scrollContainer.classList.add('animate-sweep');
-        document.body.classList.add('modal-open'); // Fix infinite scroll
+        document.body.classList.add('modal-open');
       }, 300);
     });
 
     function closePoem() {
       poemPopup.classList.remove('show');
-      document.body.classList.remove('modal-open'); // Allow body scroll again
+      document.body.classList.remove('modal-open');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -660,7 +771,6 @@ The question then becomes, what priority’s the lover?</div>
       const fallingHearts = document.getElementById('fallingHearts');
       const lastItem = document.getElementById('finalItem');
       
-      // Close modal when clicking outside content backdrop
       poemPopup.addEventListener('click', (e) => {
         if (e.target === poemPopup) closePoem();
       });
@@ -718,35 +828,155 @@ The question then becomes, what priority’s the lover?</div>
       }
       carousel.addEventListener('scroll', checkScroll);
 
-      // EASTER EGG SUPERNOVA LOGIC
+      /* --- CINEMATIC 3D SUPERNOVA ENGINE --- */
+      const ctx = supernovaCanvas.getContext('2d');
+      let particles = [];
+      let animId = null;
+
+      function resizeCanvas() {
+        supernovaCanvas.width = window.innerWidth;
+        supernovaCanvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = (Math.random() - 0.5) * supernovaCanvas.width * 1.5;
+          this.y = (Math.random() - 0.5) * supernovaCanvas.height * 1.5;
+          this.z = Math.random() * 1000 + 100;
+          this.size = Math.random() * 4 + 1.5;
+          const colors = ['#D4AF37', '#E8B4B8', '#FFF8F0', '#9966CC', '#FFFFFF', '#FFD700'];
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.speedZ = Math.random() * 18 + 12;
+          this.angle = Math.random() * Math.PI * 2;
+          this.spin = (Math.random() - 0.5) * 0.05;
+        }
+        update(warpSpeed) {
+          this.z -= this.speedZ * warpSpeed;
+          this.angle += this.spin;
+          if (this.z <= 1) {
+            this.reset();
+            this.z = 1000;
+          }
+        }
+        draw() {
+          const cx = supernovaCanvas.width / 2;
+          const cy = supernovaCanvas.height / 2;
+          const k = 450 / this.z;
+          const px = this.x * k + cx;
+          const py = this.y * k + cy;
+          const radius = Math.max(0.5, this.size * k);
+
+          if (px >= -50 && px <= supernovaCanvas.width + 50 && py >= -50 && py <= supernovaCanvas.height + 50) {
+            ctx.save();
+            ctx.translate(px, py);
+            ctx.rotate(this.angle);
+            
+            // Draw Shimmering Stars / Gold Glitter Sparks
+            ctx.beginPath();
+            for (let i = 0; i < 4; i++) {
+              ctx.lineTo(Math.cos(i * Math.PI / 2) * radius * 2.5, Math.sin(i * Math.PI / 2) * radius * 2.5);
+              ctx.lineTo(Math.cos((i + 0.5) * Math.PI / 2) * radius * 0.6, Math.sin((i + 0.5) * Math.PI / 2) * radius * 0.6);
+            }
+            ctx.closePath();
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 18;
+            ctx.shadowColor = this.color;
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+
+      function initSupernova() {
+        particles = [];
+        for (let i = 0; i < 450; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function runSupernova(startTime) {
+        ctx.clearRect(0, 0, supernovaCanvas.width, supernovaCanvas.height);
+        const elapsed = Date.now() - startTime;
+        
+        // Exponentially increasing warp speed to rush toward viewer
+        const warpSpeed = Math.min(6.0, 1 + (elapsed / 600) ** 2);
+        
+        // Draw radiant center shockwave glow
+        const cx = supernovaCanvas.width / 2;
+        const cy = supernovaCanvas.height / 2;
+        const glowRadius = Math.min(Math.max(10, elapsed * 0.45), Math.max(supernovaCanvas.width, supernovaCanvas.height));
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowRadius);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+        grad.addColorStop(0.3, 'rgba(232, 180, 184, 0.6)');
+        grad.addColorStop(0.6, 'rgba(212, 175, 55, 0.35)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, supernovaCanvas.width, supernovaCanvas.height);
+
+        particles.forEach(p => {
+          p.update(warpSpeed);
+          p.draw();
+        });
+
+        if (elapsed < 3200) {
+          animId = requestAnimationFrame(() => runSupernova(startTime));
+        }
+      }
+
+      // EASTER EGG SUPERNOVA TRIGGER
       easterEggTrigger.addEventListener('click', () => {
-        // 1. Balloon burst/float up
         eggBalloon.classList.add('balloon-burst');
         
-        // 2. Trigger supernova flash
         setTimeout(() => {
-          supernova.classList.add('explode');
+          initSupernova();
+          supernovaCanvas.classList.add('active');
+          runSupernova(Date.now());
           
-          // 3. Switch pages while screen is completely white/blinded
+          // Flash blinding light as stars zoom past the camera
           setTimeout(() => {
-            landingPage.style.display = 'none';
-            poemsPage.style.display = 'block';
+            supernovaFlare.classList.add('flash');
             
-            // Allow browser a frame to paint display:block
-            requestAnimationFrame(() => {
-              poemsPage.style.opacity = '1';
+            // Switch pages at peak brightness
+            setTimeout(() => {
+              landingPage.style.display = 'none';
+              poemsPage.style.display = 'block';
               
-              // 4. Fade out the supernova overlay to reveal new page
-              supernova.style.opacity = '0';
-              setTimeout(() => {
-                supernova.classList.remove('explode');
-                supernova.style.display = 'none';
-                window.scrollTo(0, 0); // Reset scroll to top for poems page
-              }, 1500);
-            });
-          }, 1500); // Waits for supernova to reach peak brightness
-        }, 500); // Let balloon float up for half a sec before blast
+              requestAnimationFrame(() => {
+                poemsPage.style.opacity = '1';
+                
+                // Fade out optical flare & canvas gracefully
+                setTimeout(() => {
+                  supernovaFlare.classList.remove('flash');
+                  supernovaCanvas.classList.remove('active');
+                  cancelAnimationFrame(animId);
+                  ctx.clearRect(0, 0, supernovaCanvas.width, supernovaCanvas.height);
+                  window.scrollTo(0, 0);
+                }, 800);
+              });
+            }, 1200);
+          }, 1400);
+        }, 450);
       });
+
+      // RETURN BALLOON TRIGGER (Back to beginning with preserved scroll position)
+      returnEggTrigger.addEventListener('click', () => {
+        poemsPage.style.opacity = '0';
+        setTimeout(() => {
+          poemsPage.style.display = 'none';
+          landingPage.style.display = 'block';
+          requestAnimationFrame(() => {
+            landingPage.style.opacity = '1';
+            // Scroll user cleanly to the top of the landing page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }, 800);
+      });
+
     });
   </script>
 </body>
