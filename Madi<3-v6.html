@@ -191,7 +191,7 @@
     .falling-heart { position: absolute; font-size: clamp(16px, 4vw, 24px); color: var(--rose-gold); text-shadow: 0 0 12px rgba(232, 180, 184, 0.8); animation: float-down 10s linear infinite; z-index: 999; }
     @keyframes float-down { 0% { top: -10%; opacity: 1; transform: rotate(0deg) translateX(0); } 50% { transform: rotate(180deg) translateX(20px); } 100% { top: 110%; opacity: 0; transform: rotate(360deg) translateX(-20px); } }
 
-    /* --- REFINED POEM POPUP (Strict Scroll End Boundary) --- */
+    /* --- REFINED POEM POPUP (Strict Scroll End Boundary & Zero Dead Space) --- */
     .poem-popup {
       position: fixed; top: 0; left: 0; bottom: 0; right: 0;
       background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 9999;
@@ -202,12 +202,13 @@
     .scroll-container {
       background: var(--ivory); border: clamp(4px, 1vw, 8px) solid var(--antique-gold);
       outline: 2px dashed var(--rose-gold); outline-offset: -10px; border-radius: 12px;
-      padding: clamp(30px, 6vw, 45px) clamp(20px, 5vw, 35px) 20px;
+      padding: clamp(28px, 5vw, 40px) clamp(20px, 5vw, 35px) clamp(20px, 4vw, 28px);
       width: 92%; max-width: 600px;
-      max-height: 80vh; height: auto;
+      max-height: 85vh; height: auto;
       overflow-y: auto; overscroll-behavior: contain;
       box-shadow: 0 20px 60px rgba(0,0,0,0.9); text-align: left; position: relative;
       color: var(--plum-velvet); font-family: 'Cormorant Garamond', serif; opacity: 0;
+      display: flex; flex-direction: column;
     }
     .poem-popup.show .scroll-container { animation: glitter-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
     .close-x {
@@ -216,17 +217,19 @@
       transition: transform 0.3s ease, color 0.3s ease; z-index: 10; padding: 0; line-height: 1;
     }
     .close-x:hover, .close-x:active { transform: scale(1.2) rotate(90deg); color: var(--antique-gold); }
-    .poem-title { text-align: center; font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: 20px; color: var(--royal-purple); font-family: 'Great Vibes', cursive; border-bottom: 1px solid var(--rose-gold); padding-bottom: 10px; }
-    .poem p { margin-bottom: 18px; font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.6; }
-    .poem strong { display: block; text-align: center; font-size: clamp(1.2rem, 4.5vw, 1.5rem); letter-spacing: 4px; color: var(--antique-gold); margin-bottom: 15px; }
+    .poem-title { text-align: center; font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: 18px; color: var(--royal-purple); font-family: 'Great Vibes', cursive; border-bottom: 1px solid var(--rose-gold); padding-bottom: 10px; flex-shrink: 0; }
+    .poem { display: flex; flex-direction: column; margin: 0; padding: 0; }
+    .poem p { margin-bottom: 16px; font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.6; }
+    .poem strong { display: block; text-align: center; font-size: clamp(1.2rem, 4.5vw, 1.5rem); letter-spacing: 4px; color: var(--antique-gold); margin-bottom: 14px; }
     
     .poem-footer {
-      margin-bottom: 15px !important;
+      margin-top: 8px;
+      margin-bottom: 12px !important;
     }
     .poem-footnote {
       font-size: 0.9rem; font-style: italic; color: #666; text-align: center; 
-      margin-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.3);
-      padding-top: 12px; margin-bottom: 0 !important; padding-bottom: 0 !important;
+      margin-top: 10px; border-top: 1px solid rgba(212, 175, 55, 0.3);
+      padding-top: 10px; margin-bottom: 0 !important; padding-bottom: 0 !important;
     }
 
     /* --- FOOTER & TUCKED CORNER BALLOON WIDGETS (Zero Collision) --- */
@@ -245,10 +248,10 @@
       justify-content: center;
     }
 
-    /* Left-Tucked Corner Widget (Half Visible Balloon Peeking In) */
+    /* Left-Tucked Corner Widget (Half Visible Balloon Peeking In on Left, Text on Right) */
     .tucked-balloon-left {
       position: fixed;
-      left: -14px;
+      left: -16px;
       bottom: 12px;
       display: flex;
       align-items: flex-end;
@@ -257,7 +260,7 @@
       z-index: 100;
       transition: transform 0.3s ease;
     }
-    .tucked-balloon-left:hover { transform: scale(1.08) translateX(4px); }
+    .tucked-balloon-left:hover { transform: scale(1.08) translateX(6px); }
     
     .tucked-left-label {
       font-family: 'Dancing Script', cursive;
@@ -272,7 +275,7 @@
     .tucked-left-arrow {
       font-size: 1.3rem;
       color: var(--rose-gold);
-      transform: rotate(90deg);
+      transform: rotate(-90deg);
       margin-bottom: 18px;
       pointer-events: none;
     }
@@ -288,10 +291,10 @@
     .balloon-burst { animation: burst-up 0.8s cubic-bezier(0.5, 0, 1, 1) forwards !important; }
     @keyframes burst-up { 0% { transform: scale(1) translateY(0); opacity: 1; } 50% { transform: scale(1.3) translateY(-40px); opacity: 1; filter: brightness(2); } 100% { transform: scale(3.5) translateY(-160px); opacity: 0; filter: brightness(5); } }
 
-    /* Right-Tucked Corner Widget (Half Visible Balloon Peeking In) */
+    /* Right-Tucked Corner Widget (Half Visible Balloon Peeking In on Right, Text on Left) */
     .tucked-balloon-right {
       position: fixed;
-      right: -14px;
+      right: -16px;
       bottom: 12px;
       display: flex;
       align-items: flex-end;
@@ -300,7 +303,7 @@
       z-index: 100;
       transition: transform 0.3s ease;
     }
-    .tucked-balloon-right:hover { transform: scale(1.08) translateX(-4px); }
+    .tucked-balloon-right:hover { transform: scale(1.08) translateX(-6px); }
 
     .tucked-right-label {
       font-family: 'Dancing Script', cursive;
@@ -509,11 +512,11 @@
       <div>Created with devotion for Madi</div>
     </div>
 
-    <!-- Tucked Left Balloon (Half Visible Peeking In) -->
+    <!-- Tucked Left Balloon (Balloon Peeking In on Left, Text on Right) -->
     <div class="tucked-balloon-left" id="easterEggTrigger">
-      <div class="tucked-left-label">click here for a surprise!</div>
-      <div class="tucked-left-arrow">⤹</div>
       <div class="tucked-balloon-icon" id="eggBalloon">🎈</div>
+      <div class="tucked-left-arrow">⤹</div>
+      <div class="tucked-left-label">click here for a surprise!</div>
     </div>
   </div>
 
@@ -846,7 +849,7 @@ The question then becomes, what priority’s the lover?</div>
       }
       carousel.addEventListener('scroll', checkScroll);
 
-      /* --- EXTRAVAGANT CINEMATIC SUPERNOVA ENGINE (Explosion -> Pause -> Rush Out + Roll Upwards) --- */
+      /* --- ADVANCED EXTRAVAGANT CINEMATIC SUPERNOVA ENGINE (Additive Blending & Warp Trails) --- */
       const ctx = supernovaCanvas.getContext('2d');
       let particles = [];
       let animId = null;
@@ -863,61 +866,102 @@ The question then becomes, what priority’s the lover?</div>
           this.reset(true);
         }
         reset(initial = false) {
-          this.x = (Math.random() - 0.5) * supernovaCanvas.width * (initial ? 0.3 : 1.6);
-          this.y = (Math.random() - 0.5) * supernovaCanvas.height * (initial ? 0.3 : 1.6);
-          this.z = initial ? Math.random() * 800 + 100 : 900;
-          this.size = Math.random() * 5 + 2;
-          // Vibrant multi-color glitter palette
-          const colors = ['#D4AF37', '#E8B4B8', '#FFF8F0', '#9966CC', '#FF3399', '#00FFFF', '#FFD700', '#FFFFFF'];
-          this.color = colors[Math.floor(Math.random() * colors.length)];
-          this.vx = (Math.random() - 0.5) * 16;
-          this.vy = (Math.random() - 0.5) * 16;
+          this.x = (Math.random() - 0.5) * supernovaCanvas.width * (initial ? 0.25 : 1.8);
+          this.y = (Math.random() - 0.5) * supernovaCanvas.height * (initial ? 0.25 : 1.8);
+          this.z = initial ? Math.random() * 700 + 100 : 900;
+          this.size = Math.random() * 6 + 2;
+          
+          const palette = [
+            { core: '#FFFFFF', halo: 'rgba(255, 255, 255, 0.85)' },
+            { core: '#FFF8F0', halo: 'rgba(232, 180, 184, 0.85)' },
+            { core: '#D4AF37', halo: 'rgba(212, 175, 55, 0.85)' },
+            { core: '#E8B4B8', halo: 'rgba(232, 180, 184, 0.85)' },
+            { core: '#9966CC', halo: 'rgba(153, 102, 204, 0.85)' },
+            { core: '#FF66B2', halo: 'rgba(255, 51, 153, 0.85)' }
+          ];
+          this.theme = palette[Math.floor(Math.random() * palette.length)];
+          
+          // Exponential velocity vectors for realistic shockwave dynamics
+          const theta = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 22 + 6;
+          this.vx = Math.cos(theta) * speed;
+          this.vy = Math.sin(theta) * speed;
           this.vz = Math.random() * 8 + 4;
-          this.angle = Math.random() * Math.PI * 2;
-          this.spin = (Math.random() - 0.5) * 0.08;
+          this.prevPx = 0;
+          this.prevPy = 0;
+          this.alpha = 1;
         }
+
         update(stage, elapsed) {
-          this.angle += this.spin;
+          const cx = supernovaCanvas.width / 2;
+          const cy = supernovaCanvas.height / 2;
+          const k = 450 / Math.max(1, this.z);
+          this.prevPx = this.x * k + cx;
+          this.prevPy = this.y * k + cy;
+
           if (stage === 'EXPLODE') {
-            // Outward shockwave explosion
-            this.x += this.vx * 1.4;
-            this.y += this.vy * 1.4;
-            this.z += this.vz * 0.8;
+            // Rapid high-energy outward detonation
+            this.x += this.vx * 1.35;
+            this.y += this.vy * 1.35;
+            this.z += this.vz * 0.4;
+            this.vx *= 0.985;
+            this.vy *= 0.985;
           } else if (stage === 'PAUSE') {
-            // Hover in 3D space, shimmering and twinkling
-            this.x += this.vx * 0.15;
-            this.y += this.vy * 0.15;
-            this.z -= 0.5;
+            // Gentle orbital suspension in 3D space with subtle twinkling
+            this.x += this.vx * 0.08;
+            this.y += this.vy * 0.08;
+            this.z -= 0.4;
+            this.alpha = 0.6 + Math.sin(elapsed * 0.008 + this.x) * 0.4;
           } else if (stage === 'RUSH') {
-            // Warp drive rush out of the screen toward viewer
-            this.z -= this.vz * 7.5;
-            if (this.z <= 5) this.reset(false);
+            // Lightspeed warp drive toward the viewer
+            this.z -= this.vz * 8.5;
+            if (this.z <= 10) this.reset(false);
           }
         }
-        draw() {
+
+        draw(stage) {
           const cx = supernovaCanvas.width / 2;
           const cy = supernovaCanvas.height / 2;
           const k = 450 / Math.max(1, this.z);
           const px = this.x * k + cx;
           const py = this.y * k + cy;
-          const radius = Math.max(0.6, this.size * k);
+          const radius = Math.max(0.8, this.size * k);
 
-          if (px >= -60 && px <= supernovaCanvas.width + 60 && py >= -60 && py <= supernovaCanvas.height + 60) {
+          if (px >= -100 && px <= supernovaCanvas.width + 100 && py >= -100 && py <= supernovaCanvas.height + 100) {
             ctx.save();
-            ctx.translate(px, py);
-            ctx.rotate(this.angle);
-            
-            // Draw Starburst / Shimmering Glitter Flare
-            ctx.beginPath();
-            for (let i = 0; i < 4; i++) {
-              ctx.lineTo(Math.cos(i * Math.PI / 2) * radius * 2.8, Math.sin(i * Math.PI / 2) * radius * 2.8);
-              ctx.lineTo(Math.cos((i + 0.5) * Math.PI / 2) * radius * 0.6, Math.sin((i + 0.5) * Math.PI / 2) * radius * 0.6);
+            ctx.globalAlpha = this.alpha;
+
+            if (stage === 'RUSH' || stage === 'EXPLODE') {
+              // High-velocity luminous warp/shockwave streaks
+              ctx.beginPath();
+              ctx.moveTo(this.prevPx, this.prevPy);
+              ctx.lineTo(px, py);
+              ctx.strokeStyle = this.theme.core;
+              ctx.lineWidth = Math.max(1.5, radius * 0.85);
+              ctx.lineCap = 'round';
+              ctx.stroke();
+
+              // Additive glowing halo trail
+              ctx.beginPath();
+              ctx.moveTo(this.prevPx, this.prevPy);
+              ctx.lineTo(px, py);
+              ctx.strokeStyle = this.theme.halo;
+              ctx.lineWidth = Math.max(3, radius * 2.2);
+              ctx.lineCap = 'round';
+              ctx.stroke();
+            } else {
+              // Suspended starlit plasma spheres with radial gradient glow
+              const grad = ctx.createRadialGradient(px, py, 0, px, py, radius * 2.5);
+              grad.addColorStop(0, this.theme.core);
+              grad.addColorStop(0.35, this.theme.halo);
+              grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+              ctx.beginPath();
+              ctx.arc(px, py, radius * 2.5, 0, Math.PI * 2);
+              ctx.fillStyle = grad;
+              ctx.fill();
             }
-            ctx.closePath();
-            ctx.fillStyle = this.color;
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = this.color;
-            ctx.fill();
+
             ctx.restore();
           }
         }
@@ -925,7 +969,7 @@ The question then becomes, what priority’s the lover?</div>
 
       function initSupernova() {
         particles = [];
-        for (let i = 0; i < 550; i++) {
+        for (let i = 0; i < 600; i++) {
           particles.push(new Particle());
         }
       }
@@ -935,32 +979,38 @@ The question then becomes, what priority’s the lover?</div>
         const elapsed = Date.now() - startTime;
         
         let stage = 'EXPLODE';
-        if (elapsed > 900 && elapsed <= 1600) stage = 'PAUSE';
-        if (elapsed > 1600) stage = 'RUSH';
+        if (elapsed > 900 && elapsed <= 1650) stage = 'PAUSE';
+        if (elapsed > 1650) stage = 'RUSH';
 
-        // Radiant nebula background glow
+        // 1. Draw glowing celestial background flash
         const cx = supernovaCanvas.width / 2;
         const cy = supernovaCanvas.height / 2;
         const maxRadius = Math.max(supernovaCanvas.width, supernovaCanvas.height);
         const glowRadius = stage === 'EXPLODE' 
-          ? Math.min(maxRadius, elapsed * 0.9) 
+          ? Math.min(maxRadius, elapsed * 1.1) 
           : maxRadius;
         
-        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowRadius);
-        grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-        grad.addColorStop(0.25, 'rgba(232, 180, 184, 0.75)');
-        grad.addColorStop(0.5, 'rgba(153, 102, 204, 0.55)');
-        grad.addColorStop(0.75, 'rgba(212, 175, 55, 0.35)');
-        grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-        ctx.fillStyle = grad;
+        const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowRadius);
+        bgGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+        bgGrad.addColorStop(0.25, 'rgba(232, 180, 184, 0.75)');
+        bgGrad.addColorStop(0.5, 'rgba(153, 102, 204, 0.55)');
+        bgGrad.addColorStop(0.75, 'rgba(212, 175, 55, 0.35)');
+        bgGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, supernovaCanvas.width, supernovaCanvas.height);
+
+        // 2. Enable Additive Photometric Blending for realistic light bloom
+        ctx.globalCompositeOperation = 'lighter';
 
         particles.forEach(p => {
           p.update(stage, elapsed);
-          p.draw();
+          p.draw(stage);
         });
 
-        if (elapsed < 3000) {
+        // Restore normal composite mode
+        ctx.globalCompositeOperation = 'source-over';
+
+        if (elapsed < 3100) {
           animId = requestAnimationFrame(() => runSupernova(startTime));
         }
       }
@@ -996,7 +1046,7 @@ The question then becomes, what priority’s the lover?</div>
                 }, 1000);
               });
             }, 550);
-          }, 1600);
+          }, 1650);
         }, 400);
       });
 
