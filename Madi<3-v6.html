@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Happy National Girlfriends Day, Madi!</title>
+  
+  <!-- Imported an array of beautiful Google Fonts for the various poems -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Lato:ital,wght@0,300;0,400;1,300&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- THEME VARIABLES --- */
+    :root {
+      /* Dark Theme (Landing Page) */
+      --plum-velvet: #1A0A1F;
+      --ivory: #FFF8F0;
+      --royal-purple: #3D1B4E;
+      --rose-gold: #E8B4B8;
+      --antique-gold: #D4AF37;
+      --pearl-white: #F8F6FF;
+      --amethyst: #9966CC;
+      
+      /* Light Theme (Poems Archive Page) */
+      --light-pearl: #FCFAFA;
+      --champagne: #FDF7F2;
+      --dark-plum: #2A1133;
+      --warm-gold: #B8902E;
+      --blush-pink: #F4D3D6;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--plum-velvet);
+      color: var(--ivory);
+      overflow-x: hidden;
+      position: relative;
+      /* Fixed for mobile infinite scroll bug */
+      overscroll-behavior-y: none;
+    }
+
+    /* Used via JS to lock body scrolling when popup is open */
+    body.modal-open { overflow: hidden; }
+
+    /* --- PAGE CONTAINERS --- */
+    #landing-page { transition: opacity 1s ease; }
+    #poems-page { display: none; opacity: 0; transition: opacity 2s ease; }
+
+    /* --- DARK THEME BACKGROUNDS (Landing) --- */
+    #landing-page::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 25%, rgba(232, 180, 184, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(212, 175, 55, 0.2) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(212, 175, 55, 0.04) 20px, rgba(212, 175, 55, 0.04) 40px);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .glitter-overlay, .glitter-overlay-2 {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      background-image: 
+        radial-gradient(1.5px 1.5px at 10% 20%, #FFF 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 30% 40%, #D4AF37 50%, transparent 100%),
+        radial-gradient(1px 1px at 50% 60%, #E8B4B8 50%, transparent 100%),
+        radial-gradient(2px 2px at 70% 80%, #FFF 50%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 90% 10%, #D4AF37 50%, transparent 100%),
+        radial-gradient(2px 2px at 15% 85%, #E8B4B8 50%, transparent 100%),
+        radial-gradient(1px 1px at 80% 30%, #FFF 50%, transparent 100%),
+        radial-gradient(2.5px 2.5px at 45% 15%, #D4AF37 50%, transparent 100%);
+      background-size: 150px 150px;
+      animation: glitter-twinkle 4s infinite alternate;
+      opacity: 0.6;
+    }
+    .glitter-overlay-2 {
+      background-size: 200px 200px;
+      animation: glitter-twinkle 3s infinite alternate-reverse;
+      transform: rotate(180deg);
+      opacity: 0.4;
+    }
+
+    @keyframes glitter-twinkle {
+      0% { opacity: 0.2; transform: scale(1) translateY(0); }
+      50% { opacity: 0.9; transform: scale(1.05) translateY(-2px); filter: brightness(1.5); }
+      100% { opacity: 0.2; transform: scale(1) translateY(0); }
+    }
+
+    /* Headings */
+    header { padding: 60px 15px 30px; position: relative; z-index: 10; text-align: center; }
+    .sub-header {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: var(--rose-gold);
+      line-height: 1.2;
+      text-shadow: 0 0 25px rgba(232, 180, 184, 0.4), 0 0 10px rgba(212, 175, 55, 0.5);
+      animation: gold-shimmer-text 8s linear infinite;
+      background: linear-gradient(to right, #E8B4B8, #FFF8F0, #D4AF37, #E8B4B8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+    }
+    @keyframes gold-shimmer-text { to { background-position: 200% center; } }
+
+    .container { padding: 0 15px 80px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 10; text-align: center;}
+    .message, .final-message {
+      background: rgba(61, 27, 78, 0.65); backdrop-filter: blur(12px);
+      padding: clamp(20px, 5vw, 40px); border: 2px solid var(--antique-gold);
+      border-radius: 20px; margin: 30px auto; font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.7;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 20px rgba(212, 175, 55, 0.1); max-width: 800px; width: 95%;
+    }
+    .message h2 {
+      font-family: 'Cormorant Garamond', serif; color: var(--antique-gold);
+      font-size: clamp(1.8rem, 6vw, 2.5rem); margin-top: 0; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    /* Carousel */
+    .carousel-wrapper { position: relative; margin: 40px 0; }
+    .carousel {
+      overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      display: flex; align-items: center; gap: 6vw; padding: 40px 5vw; scrollbar-width: none; 
+    }
+    .carousel::-webkit-scrollbar { display: none; }
+    .carousel-item { flex: 0 0 auto; scroll-snap-align: center; width: 80vw; max-width: 450px; position: relative; transition: transform 0.4s ease; }
+    .carousel-item:hover { transform: translateY(-5px) scale(1.02); }
+    .carousel-item img { width: 100%; height: auto; display: block; border-radius: 16px; border: 3px solid var(--antique-gold); box-shadow: 0 15px 30px rgba(0,0,0,0.7); }
+    .carousel-item:nth-child(even) img { border-color: var(--rose-gold); }
+    .carousel-item:nth-child(3n) img { border-color: var(--amethyst); }
+
+    /* Final Frame */
+    .final-frame-wrapper {
+      flex: 0 0 100vw; width: 100vw; display: flex; justify-content: center; align-items: center;
+      margin-left: 20vw; padding: 0 5vw; box-sizing: border-box; scroll-snap-align: center;
+    }
+    .realistic-frame {
+      position: relative; background: var(--pearl-white); padding: clamp(3%, 4vw, 5%); 
+      border-width: clamp(12px, 5vw, 35px); border-style: solid;
+      border-image: linear-gradient(135deg, #826315 0%, #d4af37 15%, #fcf6ba 30%, #a67c00 50%, #fcf6ba 70%, #d4af37 85%, #826315 100%) 1;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 25px rgba(0,0,0,0.4); width: 100%; max-width: 600px; transition: none; 
+    }
+    .final-frame-wrapper .carousel-item:hover { transform: none; }
+    .realistic-frame img { border: clamp(1px, 0.5vw, 2px) solid rgba(212, 175, 55, 0.6) !important; border-radius: 0 !important; box-shadow: 0 0 20px rgba(0,0,0,0.5) !important; }
+
+    /* Scroll Prompt */
+    .scroll-prompt {
+      position: absolute; top: 50%; right: 15px; transform: translateY(-50%);
+      background: rgba(212, 175, 55, 0.9); color: var(--plum-velvet); width: clamp(45px, 12vw, 60px); height: clamp(45px, 12vw, 60px);
+      border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: clamp(1.5rem, 5vw, 2rem);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 20;
+    }
+    .scroll-prompt.active { opacity: 1; animation: gilded-pulse 2s infinite; }
+    @keyframes gilded-pulse {
+      0% { transform: translateY(-50%) scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.6); }
+      50% { transform: translateY(-50%) scale(1.1); box-shadow: 0 0 30px rgba(255, 235, 150, 0.9); }
+      100% { transform: translateY(-50%) scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.6); }
+    }
+
+    /* Glitter In Effects */
+    @keyframes glitter-in {
+      0% { opacity: 0; transform: scale(0.7) translateY(30px); filter: brightness(2.5) contrast(1.5) blur(10px); text-shadow: 0 0 60px #FFF; }
+      50% { opacity: 0.8; transform: scale(1.05) translateY(-5px); filter: brightness(1.5) contrast(1.2) blur(2px); text-shadow: 0 0 30px var(--antique-gold); }
+      100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1) contrast(1) blur(0); text-shadow: 0 0 15px rgba(212, 175, 55, 0.7); }
+    }
+    .glitter-sweep { position: relative; overflow: hidden; }
+    .glitter-sweep::after {
+      content: ''; position: absolute; top: -150%; left: -150%; width: 400%; height: 400%;
+      background: linear-gradient(45deg, transparent 45%, rgba(255, 255, 255, 0.8) 50%, transparent 55%);
+      pointer-events: none; z-index: 50; opacity: 0;
+    }
+    .animate-sweep::after { animation: sweep 1.5s ease-out 0.2s forwards; }
+    @keyframes sweep { 0% { transform: translateX(-50%) translateY(-50%); opacity: 0;} 10% { opacity: 1; } 100% { transform: translateX(50%) translateY(50%); opacity: 0; } }
+
+    /* Falling Animations Overlay */
+    .falling-hearts {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(26, 10, 31, 0.9); backdrop-filter: blur(8px);
+      display: flex; justify-content: center; align-items: center; text-align: center; overflow: hidden; z-index: 1000;
+      visibility: hidden; opacity: 0; transition: opacity 1.5s ease-out, visibility 1.5s;
+    }
+    .falling-hearts.show { visibility: visible; opacity: 1; }
+    .falling-hearts .message {
+      z-index: 1001; font-family: 'Great Vibes', cursive; font-size: clamp(2.2rem, 8vw, 4.5rem);
+      color: var(--antique-gold); width: 90%; line-height: 1.3; opacity: 0; 
+    }
+    .falling-hearts.show .message { animation: glitter-in 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    .falling-heart { position: absolute; font-size: clamp(16px, 4vw, 24px); color: var(--rose-gold); text-shadow: 0 0 12px rgba(232, 180, 184, 0.8); animation: float-down 10s linear infinite; z-index: 999; }
+    @keyframes float-down { 0% { top: -10%; opacity: 1; transform: rotate(0deg) translateX(0); } 50% { transform: rotate(180deg) translateX(20px); } 100% { top: 110%; opacity: 0; transform: rotate(360deg) translateX(-20px); } }
+
+    /* --- REFINED POEM POPUP (Fixes applied) --- */
+    .poem-popup {
+      position: fixed; top: 0; left: 0; bottom: 0; right: 0; /* Ensures true boundaries on mobile */
+      background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 9999;
+      display: flex; justify-content: center; align-items: center;
+      visibility: hidden; opacity: 0; transition: opacity 0.5s ease, visibility 0.5s;
+    }
+    .poem-popup.show { visibility: visible; opacity: 1; }
+    .scroll-container {
+      background: var(--ivory); border: clamp(4px, 1vw, 8px) solid var(--antique-gold);
+      outline: 2px dashed var(--rose-gold); outline-offset: -10px; border-radius: 12px;
+      padding: clamp(30px, 6vw, 50px) clamp(20px, 5vw, 40px); width: 92%; max-width: 600px;
+      max-height: 85%; /* Using % instead of vh prevents issues on mobile browsers */
+      overflow-y: auto; overscroll-behavior: contain; /* CRITICAL FIX: prevents passing scroll to body */
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9); text-align: left; position: relative;
+      color: var(--plum-velvet); font-family: 'Cormorant Garamond', serif; opacity: 0; 
+    }
+    .poem-popup.show .scroll-container { animation: glitter-in 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    .close-x {
+      position: absolute; top: 15px; right: 20px; background: transparent; border: none;
+      color: var(--rose-gold); font-size: 2.5rem; cursor: pointer; font-family: 'Lato', sans-serif;
+      transition: transform 0.3s ease, color 0.3s ease; z-index: 10; padding: 0; line-height: 1;
+    }
+    .close-x:hover, .close-x:active { transform: scale(1.2) rotate(90deg); color: var(--antique-gold); }
+    .poem-title { text-align: center; font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: 20px; color: var(--royal-purple); font-family: 'Great Vibes', cursive; border-bottom: 1px solid var(--rose-gold); padding-bottom: 10px; }
+    .poem p { margin-bottom: 20px; font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.6; }
+    .poem strong { display: block; text-align: center; font-size: clamp(1.2rem, 4.5vw, 1.5rem); letter-spacing: 4px; color: var(--antique-gold); margin-bottom: 15px; }
+    
+    /* Footnote specific style */
+    .poem-footnote {
+      font-size: 0.9rem; font-style: italic; color: #666; text-align: center; 
+      margin-top: 20px; border-top: 1px solid rgba(212, 175, 55, 0.3); padding-top: 15px;
+    }
+
+    /* --- FOOTER & EASTER EGG --- */
+    .footer-container {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      padding: 40px 15px; color: var(--rose-gold); font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.5rem, 5vw, 2rem); z-index: 10; width: 100%; max-width: 1200px; margin: 0 auto;
+    }
+    
+    .easter-egg-wrapper {
+      position: absolute; left: 15px; bottom: 30px; display: flex; align-items: flex-end; gap: 10px;
+      cursor: pointer; z-index: 50; transition: transform 0.3s ease;
+    }
+    .easter-egg-wrapper:hover { transform: scale(1.05); }
+    
+    .easter-egg-text {
+      font-family: 'Dancing Script', cursive; font-size: clamp(1rem, 3.5vw, 1.3rem);
+      color: var(--antique-gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+      transform: rotate(-10deg); margin-bottom: 15px;
+    }
+    .easter-egg-arrow { font-size: 1.5rem; color: var(--rose-gold); transform: rotate(90deg); margin-bottom: 20px; }
+    .easter-egg-balloon { font-size: 2.5rem; text-shadow: 0 5px 15px rgba(232, 180, 184, 0.5); transform-origin: bottom center; animation: balloon-float 3s ease-in-out infinite alternate; }
+    
+    @keyframes balloon-float { 0% { transform: translateY(0) rotate(-2deg); } 100% { transform: translateY(-10px) rotate(2deg); } }
+    
+    /* Easter Egg Burst Animation Classes */
+    .balloon-burst { animation: burst-up 1s cubic-bezier(0.5, 0, 1, 1) forwards !important; }
+    @keyframes burst-up { 0% { transform: scale(1) translateY(0); opacity: 1; } 50% { transform: scale(1.2) translateY(-50px); opacity: 1; filter: brightness(2); } 100% { transform: scale(3) translateY(-150px); opacity: 0; filter: brightness(5); } }
+
+    /* --- SUPERNOVA TRANSITION OVERLAY --- */
+    #supernova-screen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: radial-gradient(circle at 20% 80%, #FFF, #FDF7F2 30%, #E8B4B8 60%, transparent 100%);
+      z-index: 20000; opacity: 0; pointer-events: none; mix-blend-mode: screen;
+      transition: opacity 1.5s cubic-bezier(0.4, 0, 1, 1);
+    }
+    #supernova-screen.explode { opacity: 1; pointer-events: all; background: #FFF; box-shadow: inset 0 0 100px 50px rgba(255, 255, 255, 0.9); }
+
+    /* --- NEW LIGHT PAGE: POEMS ARCHIVE --- */
+    #poems-page {
+      background: var(--champagne);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.8) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.3) 10px, rgba(255, 255, 255, 0.3) 20px);
+      min-height: 100vh; color: var(--dark-plum); padding: 60px 15px; position: relative; z-index: 10;
+    }
+    
+    .poems-header { text-align: center; margin-bottom: 60px; }
+    .poems-title {
+      font-family: 'Playfair Display', serif; font-size: clamp(2rem, 7vw, 4rem);
+      color: var(--dark-plum); letter-spacing: 2px;
+      text-shadow: 1px 1px 0px #FFF, 2px 2px 5px rgba(212, 175, 55, 0.4);
+    }
+    .poems-divider {
+      width: 150px; height: 2px; background: linear-gradient(90deg, transparent, var(--warm-gold), transparent);
+      margin: 20px auto;
+    }
+
+    .poems-grid { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 80px; }
+    
+    .poem-card {
+      background: var(--light-pearl); padding: clamp(30px, 5vw, 60px);
+      border-radius: 12px; position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05), inset 0 0 15px rgba(255,255,255,1);
+    }
+    
+    /* Variety of Poem Styles based on tone */
+    .poem-date { font-family: 'Lato', sans-serif; font-size: 0.9rem; color: #888; margin-bottom: 15px; letter-spacing: 2px; }
+    .poem-title-text { margin: 0 0 25px 0; font-size: clamp(1.5rem, 5vw, 2.2rem); }
+    .poem-body { font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.8; white-space: pre-wrap; }
+
+    /* Style 1: TRUE & TO GROW A HEART (Classic, Romantic) */
+    .style-classic { text-align: center; font-family: 'Cormorant Garamond', serif; border: 1px solid var(--blush-pink); }
+    .style-classic .poem-title-text { color: var(--warm-gold); font-family: 'Cinzel', serif; letter-spacing: 4px; }
+    
+    /* Style 2: ODE TO IRIS (Elegant, Flowing) */
+    .style-elegant { text-align: left; font-family: 'Playfair Display', serif; border-left: 4px solid var(--warm-gold); border-radius: 0 12px 12px 0; }
+    .style-elegant .poem-title-text { font-family: 'Great Vibes', cursive; font-size: clamp(2rem, 6vw, 3rem); color: var(--dark-plum); }
+
+    /* Style 3: REVERIE UPON A HILL (Light, Dreamy) */
+    .style-dreamy { text-align: center; font-family: 'Lato', sans-serif; font-weight: 300; font-style: italic; background: transparent; box-shadow: none; border-top: 1px dashed var(--warm-gold); border-bottom: 1px dashed var(--warm-gold); border-radius: 0; }
+    .style-dreamy .poem-title-text { font-family: 'Lato', sans-serif; font-weight: 400; letter-spacing: 3px; color: var(--warm-gold); }
+
+    /* Style 4: ODE OF AVARICE & KILLERS (Darker, Intense) */
+    .style-dark { text-align: justify; font-family: 'Cinzel', serif; background: var(--dark-plum); color: var(--champagne); box-shadow: 0 20px 40px rgba(42, 17, 51, 0.4); }
+    .style-dark .poem-date { color: var(--warm-gold); }
+    .style-dark .poem-title-text { color: var(--blush-pink); text-shadow: 0 0 10px rgba(244, 211, 214, 0.3); }
+
+    /* Style 5: FAREWELL FAIR (Playful, Cursive) */
+    .style-playful { text-align: center; font-family: 'Dancing Script', cursive; font-size: clamp(1.3rem, 5vw, 1.6rem); border: 2px dotted var(--blush-pink); }
+    .style-playful .poem-title-text { font-family: 'Playfair Display', serif; color: var(--warm-gold); font-style: italic; }
+
+    /* Style 6: PRIORITY (Modern, Clean) */
+    .style-modern { text-align: left; font-family: 'Lato', sans-serif; border-radius: 0; border-bottom: 4px solid var(--dark-plum); }
+    .style-modern .poem-title-text { font-family: 'Lato', sans-serif; font-weight: 700; letter-spacing: 1px; color: var(--dark-plum); text-transform: uppercase; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Landing Page Wrap -->
+  <div id="landing-page">
+    <div class="glitter-overlay"></div>
+    <div class="glitter-overlay glitter-overlay-2"></div>
+
+    <header>
+      <div class="sub-header">Happy National<br>Girlfriends Day, Madi</div>
+    </header>
+
+    <div class="container">
+      <div class="message">
+        <h2>To My Beautiful Queen</h2>
+        <p>
+          On this special day, I want to celebrate the incredible person you are and the joy you bring into my life. 
+          Every moment with you is a treasured memory, and I look forward to making many more. You mean the world to me.
+        </p>
+      </div>
+
+      <div class="carousel-wrapper">
+        <div class="carousel-inner carousel">
+          
+          <!-- Shuffled Photos -->
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/tf59y7xtr8t9algxvl7ta/IMG_3929.jpeg?rlkey=303y47dsu4gwwm0uhduz5v27k&st=ufdf17ck&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/4v6trwzcn1t0sweabl82t/IMG_8814.jpeg?rlkey=9k9dzygqfyzedyzarpivj0ice&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/hxgsdjyrsxhqi3ac5ovjy/IMG_4101.jpeg?rlkey=bd7ql2zwd2ghbdzxiv5do0khj&st=pujjohgf&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/rn0nf0ug92zmmuuprryk3/IMG_9209.jpeg?rlkey=3z0ox4rzoz6bkc582w8pqobb8&st=hdt31lmb&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/993o2wreadu0i4bcxsm8r/IMG_4388.jpeg?rlkey=rszg9gt5xhmz2hsirkbyze6ox&st=or3zljqm&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/2bilan6rad9fzxj1wjalt/IMG_7196.jpeg?rlkey=jkuu95zx3090h8ppirxumxpgh&st=0igv8881&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/fxs7ddrcrfk6e3pcj71w3/IMG_7532.jpeg?rlkey=qwn7el2yhrluwuladrb6cair8&st=0dbbkhir&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/div2fbw9rl0c7kjb8qmtk/IMG_4023.jpeg?rlkey=krlpehwjeggc4mscec4s06n9h&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/sodzum0h7d5elmehjtamo/IMG_8922.jpeg?rlkey=ceim8dglyqnqfx2uctyery4ls&st=vgvz6ny8&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/bjmyhf1nu93pznvw3ooqy/IMG_4057.jpeg?rlkey=82blcv73swdnkwgzv71quedvc&st=r45xk25h&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/bpg0jjne5m1jeryju87kr/IMG_3946.jpeg?rlkey=8q74dbudlouikxlvk42y3on6r&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/1vl41n2g3h6ecfe1kyygm/IMG_8654.jpeg?rlkey=87qmwaqva9r2srnjtrqefhng4&st=305wjfwl&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/sfgj9wft8xehyk8c74omq/80595127992__1E6A0816-D96C-45C7-8443-FFACF7CAB0C7.jpeg?rlkey=fox37qzx6y5lm6gwipq16p4rb&st=gsydbuw9&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/6ea18nuhodau5gib9pl63/IMG_8395.jpeg?rlkey=73mqk1lt21pvasiiqlkgzl7he&st=mlxinm9g&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/42il757zdvwahsb80qkmj/Snapchat-1464861716.jpeg?rlkey=esx78etj44973ecrypiw4qr34&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/e7yazc4vbbhx4sp82ci0n/IMG_3423.jpeg?rlkey=rqn8n321ajbyeri4b9sv1fk8m&st=8d16dqo6&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/o2jwd90srqzcbzw0ipqgf/IMG_1925.jpeg?rlkey=r3oy2uohc60b7pswh12g5umjr&st=t7sy13sn&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/d4ybyr597qx1gayt47gbq/IMG_8921.jpeg?rlkey=az0o6cuy3dfl3jd9btsa4sbi7&st=skiipec8&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/tikzmv779mdv3w3lqqmlo/IMG_3041.jpeg?rlkey=ol4daftcedt5qufc0xpmd87gc&st=83p9t7hr&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/5mh5bfbq0oen74oyjjlw5/IMG_5594.jpeg?rlkey=vk3hlduog6ruovx0a75cm1lj9&st=cox9z7mw&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/r99obwmvfasg9p8fqq3ja/IMG_7059.jpeg?rlkey=evi30uaohnqz1hucgj3u2k8wa&st=sdizzztu&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/tfzaoagfbhf25esbrc369/IMG_4375.jpeg?rlkey=a2igfbncdn034a5ldtttqbh5p&st=a7s1qz95&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/h834ltgtmsg94e9cvjlgz/IMG_8931.jpeg?rlkey=842zchkrapv4hr4naw7200syy&st=rszrwzu2&raw=1" alt="Memory"></div>
+          <div class="carousel-item"><img src="https://www.dropbox.com/scl/fi/6pufv7np2rnlf9w452rt0/IMG_4336.jpeg?rlkey=0cro4e5wl9jq6wpm9qquerwu7&st=5jgwm0gq&raw=1" alt="Memory"></div>
+
+          <!-- Grand Finale -->
+          <div class="final-frame-wrapper" id="finalItem">
+            <div class="carousel-item realistic-frame">
+              <img src="https://www.dropbox.com/scl/fi/z9dc5ysihy4hgl5aykiw7/IMG_3204.jpeg?rlkey=38wescwftsij3kjg4cnfrqmhq&st=ng57s0gf&raw=1" alt="Our Cutest">
+            </div>
+          </div>
+
+        </div>
+        
+        <div class="scroll-prompt" id="scrollPrompt">&#10095;</div>
+      </div>
+
+      <div class="final-message">
+        Looking forward to many more special days with you.<br><br>
+        <span style="color: var(--antique-gold); font-family: 'Great Vibes', cursive; font-size: clamp(1.8rem, 6vw, 2.5rem); line-height: 1.3; display: block; margin-top: 10px;">I truly am the luckiest boyfriend.</span>
+      </div>
+    </div>
+
+    <!-- Footer + Easter Egg -->
+    <div class="footer-container">
+      <div class="easter-egg-wrapper" id="easterEggTrigger">
+        <div class="easter-egg-text">click here for a surprise!</div>
+        <div class="easter-egg-arrow">⤹</div>
+        <div class="easter-egg-balloon" id="eggBalloon">🎈</div>
+      </div>
+      <div>Created with devotion for Madi</div>
+    </div>
+  </div>
+
+  <!-- Falling Animations Overlay -->
+  <div class="falling-hearts" id="fallingHearts">
+    <div class="message glitter-sweep">
+      Another year with you has flown by, with so many ups and downs, it really has been a ride. You are loved, Madi.
+    </div>
+  </div>
+
+  <!-- Poem Popup Modal (Fixed infinite scroll + New text) -->
+  <div class="poem-popup" id="poemPopup">
+    <div class="scroll-container glitter-sweep">
+      <button class="close-x" onclick="closePoem()">&times;</button>
+      <div class="poem-title">August 1st, 2025</div>
+      <div class="poem">
+        <p><strong>LOST LOTUS LULLABY</strong></p>
+        <p>
+          What time so loved, in shine and song so bloomed,<br>
+          Blunt winter dare frost those petals cold.<br>
+          What time did form, to dust he’d sold.<br>
+          Bright petals turn dull, fall like wind so plumed.
+        </p>
+        <p>
+          Hearts so far, lost to reach, where petals fall, one to each, foul winter breath so loomed.<br>
+          To whisper death, withered petals did, he’d told.<br>
+          Flower bloomed from fates our own, but was time’s alone to hold.<br>
+          Unwilling wilt assumed.
+        </p>
+        <p>
+          But try time he might, and though he will, I’ll spite each winter’s icy chill.<br>
+          So, Father Time doth our hearts eschew,<br>
+          For no greater adoration does time, for you, in me instill.<br>
+          That no distance, nor time so cold, could dare halt the beating of my heart for two.
+        </p>
+        <p>
+          In knowing, I’ll hold you in my arms until,<br>
+          For each fallen petal I’ll in time renew.
+        </p>
+        <div class="poem-footer">To my beloved Madilyn Swavola,<br>love Gabe Crocker</div>
+        
+        <!-- Requested Footnote -->
+        <div class="poem-footnote">
+          *This was the very first poem I’d written dedicated to you.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supernova Transition Element -->
+  <div id="supernova-screen"></div>
+
+  <!-- NEW PAGE: Poems Archive -->
+  <div id="poems-page">
+    <div class="poems-header">
+      <h1 class="poems-title">Poems dedicated to<br>Madilyn Swavola</h1>
+      <div class="poems-divider"></div>
+    </div>
+    
+    <div class="poems-grid">
+      
+      <!-- Poem 1: TRUE -->
+      <div class="poem-card style-classic">
+        <div class="poem-date">8/1/25</div>
+        <h3 class="poem-title-text">TRUE</h3>
+        <div class="poem-body">What was that secret feeling none could know?
+A fool I’d be, to claim that apple’s eye,
+That myth, that art, a fable yet to show,
+But cools my heart, each time I hear her cry.
+
+To take for all there is, today is gold.
+Yet flaw is virtue too, adored a while,
+So fool I’ll be, to wrap her when she’s cold,
+And stake in awe, its worth for just her smile.
+
+To see her world, I’d sought, but lit a fire,
+(Sick hearts like mine are seldom truly sane),
+And watched, as she’d become my own entire.
+For all she is, I pick to end this feign.
+
+In all my thoughts of course, that her is you,
+I know not what you’ll say, but know that this is true.</div>
+      </div>
+
+      <!-- Poem 2: ODE TO IRIS -->
+      <div class="poem-card style-elegant">
+        <div class="poem-date">6/24/25</div>
+        <h3 class="poem-title-text">Ode to Iris</h3>
+        <div class="poem-body">Glitter give, this spiral view.
+Entrap, intrigue, my sight entrance.
+Not of it so, that Earthy hue.
+Nigh but realm of lone, does steal my glance.
+
+Scour these depths, search till old.
+This story tell, what riddle write?
+What stars within, what glisten hold?
+Greed embodied, for iris sight,
+
+Forever held, and glad to be;
+Long for love, this world I see.</div>
+      </div>
+
+      <!-- Poem 3: REVERIE UPON A HILL -->
+      <div class="poem-card style-dreamy">
+        <div class="poem-date">6/23/25</div>
+        <h3 class="poem-title-text">REVERIE UPON A HILL</h3>
+        <div class="poem-body">Upon that golden sky my gaze doth rest,
+What gentle breeze sways earth, this grassy hill, myself too.
+How sun fills these eyes, warms this skin caressed.
+Who, all sun all sight be seized, might yet touch warmly this heart, but you?
+
+Indeed to challenge sun for reign,
+For all before me dare not bring greater bliss,
+What a view it is, but in your smile I might truly gain,
+Here to hold, exist there no greater scene than this.
+
+Oh to breathe, to touch, to live this sight,
+Find here no care, but for breeze and that beside.
+One with world, and one with light.
+I’ll gladly close these eyes, so might we hold eternal here, where love and peace reside.
+
+Why accursed sun must you rise today, mock these eyes with light, what vice?
+Again, to tear away from dream, away that paradise.</div>
+      </div>
+
+      <!-- Poem 4: ODE OF AVARICE -->
+      <div class="poem-card style-dark">
+        <div class="poem-date">9/26/25</div>
+        <h3 class="poem-title-text">ODE OF AVARICE</h3>
+        <div class="poem-body">To end a search, for purpose you I’ve found;
+Whose majesty of heart, is vast enough to scour,
+Would suit her beauty true not earthly bound;
+I know not to revere, or long devour.
+
+Your being is an art, that I alone should see.
+If worshipped from below, I’d own that land,
+I won’t let any dare, no none but me,
+To even bear you in their thoughts, fear greed in my demand.
+But fate makes me your peer, though there I can’t align.
+This need does hate another’s try, as long as you are mine.</div>
+      </div>
+
+      <!-- Poem 5: KILLERS -->
+      <div class="poem-card style-dark">
+        <div class="poem-date">10/15/25</div>
+        <h3 class="poem-title-text">KILLERS</h3>
+        <div class="poem-body">What a unique cruelty you now my mind infect,
+To promise promises, provoke the will,
+How might your poison, learn to love me still;
+The hour of our own, I tenderly reflect.
+
+So grab me by my heart, and all the doubts reject,
+Or crueler would I be, if I’d fulfill,
+My foolish thoughts, to meet I first must kill;
+This choice steals choice, that ends with mine and yours collect.
+
+Who is crueler? But what’s it matter, if my heart still hurts for you.
+My greedy heart, I hate, will ask for all you have, but knows it can’t,
+Which is more than you can give, or could, and I’m the killer,
+My words as poison to you now as yours were me, I do.
+
+Please, love the us we’ve met and lived in time, that yearn your certain pillar,
+No asks, no pleads, have trust in love for love each other, 
+More than you can give, I’d never ask another,
+Cruel, but not unique, for I’m the crueler lover,
+When faith lies short, let love become the thriller.
+Please, poison me, and I can you, my dear; Please learn to love your killer.</div>
+      </div>
+
+      <!-- Poem 6: FAREWELL FAIR -->
+      <div class="poem-card style-playful">
+        <div class="poem-date">7/2/25</div>
+        <h3 class="poem-title-text">Farewell Fair</h3>
+        <div class="poem-body">How my affections miss their mark with you,
+Pay no exceptions they, taken for foul.
+Fault both, but oh how I so love that scowl,
+We sway, this game we play, some park I knew…
+
+So come, come all, my land of attraction!
+Halt stay of fate; can only bring you woe,
+Some ride this here, this coaster of reaction,
+Or bide of late, this wheel my blame can show!
+
+Do sing and cheer, to feel that hand again,
+Like stroll this carnival, the zeal to wait
+And toss and ring; our carnal pull, and then,
+You’ll whack a mole, convince it's me you hate.
+
+This whole will teach but how your fears were true,
+To spare you tears, I’ll monster me your view.</div>
+      </div>
+
+      <!-- Poem 7: TO GROW A HEART -->
+      <div class="poem-card style-classic">
+        <div class="poem-date">6/24/25</div>
+        <h3 class="poem-title-text">TO GROW A HEART</h3>
+        <div class="poem-body">However did the time become like this?
+When once a rhyme, I from that garden picked;
+That sum, I find, was deeper than a kiss.
+Yet none could bind, so this I did restrict.
+
+But how could I ever dare to resist,
+Would I have known, our path might now align.
+I’d bloom again, to take that flower missed,
+The tomb of lone, I need you to be mine.
+
+Consequence collect, feed a broken mind;
+That you race through, like penance from above,
+This pace to lend my whole, sense all inclined.
+To mend this goal, that flower you, my love.
+
+But now, oh how? It seems I’d known no lie;
+A new heart grown, with you old heart must die.</div>
+      </div>
+
+      <!-- Poem 8: PRIORITY -->
+      <div class="poem-card style-modern">
+        <div class="poem-date">2/18/26</div>
+        <h3 class="poem-title-text">PRIORITY</h3>
+        <div class="poem-body">A plumber tends to plum, plum their number;
+A dancer’ll often dance, dancing to their tune;
+The singer’s pull to sing, like the tire is to rubber.
+Or how the driver’s need to drive strikes everyday at noon.
+
+If priority gives us our title, beyond all cover,
+The question then becomes, what priority’s the lover?</div>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    const poemPopup = document.getElementById('poemPopup');
+    const scrollContainer = document.querySelector('.poem-popup .scroll-container');
+    const heartsMsg = document.querySelector('.falling-hearts .message');
+    
+    const landingPage = document.getElementById('landing-page');
+    const poemsPage = document.getElementById('poems-page');
+    const easterEggTrigger = document.getElementById('easterEggTrigger');
+    const eggBalloon = document.getElementById('eggBalloon');
+    const supernova = document.getElementById('supernova-screen');
+
+    // On page load, trigger the poem to glitter in & lock body scroll
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        poemPopup.classList.add('show');
+        scrollContainer.classList.add('animate-sweep');
+        document.body.classList.add('modal-open'); // Fix infinite scroll
+      }, 300);
+    });
+
+    function closePoem() {
+      poemPopup.classList.remove('show');
+      document.body.classList.remove('modal-open'); // Allow body scroll again
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const carousel = document.querySelector('.carousel-inner');
+      const fallingHearts = document.getElementById('fallingHearts');
+      const lastItem = document.getElementById('finalItem');
+      
+      // Close modal when clicking outside content backdrop
+      poemPopup.addEventListener('click', (e) => {
+        if (e.target === poemPopup) closePoem();
+      });
+
+      // Prompt logic
+      let promptTimer = setTimeout(() => {
+        if (carousel.scrollLeft === 0) {
+          document.getElementById('scrollPrompt').classList.add('active');
+        }
+      }, 5000);
+
+      carousel.addEventListener('scroll', () => {
+        clearTimeout(promptTimer);
+        document.getElementById('scrollPrompt').classList.remove('active');
+      });
+
+      // Falling hearts setup
+      function createFallingHearts() {
+        const shapes = ['❤', '✨', '✦']; 
+        for (let i = 0; i < 40; i++) {
+          const heart = document.createElement('div');
+          heart.classList.add('falling-heart');
+          heart.innerText = shapes[Math.floor(Math.random() * shapes.length)];
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.animationDuration = (Math.random() * 6 + 4) + 's';
+          heart.style.animationDelay = (Math.random() * 5) + 's';
+          
+          if(Math.random() > 0.5) {
+             heart.style.color = '#D4AF37'; 
+             heart.style.textShadow = '0 0 10px rgba(212, 175, 55, 0.8)';
+          }
+          fallingHearts.appendChild(heart);
+        }
+      }
+      createFallingHearts();
+
+      let animationPlayed = false;
+      function checkScroll() {
+        const scrollPosition = carousel.scrollLeft + carousel.clientWidth;
+        const lastItemPosition = lastItem.offsetLeft + lastItem.clientWidth;
+
+        if (scrollPosition >= lastItemPosition - 30 && !animationPlayed) {
+          fallingHearts.classList.add('show');
+          heartsMsg.classList.add('animate-sweep');
+          
+          setTimeout(() => {
+            fallingHearts.style.opacity = '0';
+            setTimeout(() => {
+              fallingHearts.classList.remove('show');
+              fallingHearts.style.display = 'none'; 
+            }, 1500);
+          }, 8000);
+          animationPlayed = true;
+        }
+      }
+      carousel.addEventListener('scroll', checkScroll);
+
+      // EASTER EGG SUPERNOVA LOGIC
+      easterEggTrigger.addEventListener('click', () => {
+        // 1. Balloon burst/float up
+        eggBalloon.classList.add('balloon-burst');
+        
+        // 2. Trigger supernova flash
+        setTimeout(() => {
+          supernova.classList.add('explode');
+          
+          // 3. Switch pages while screen is completely white/blinded
+          setTimeout(() => {
+            landingPage.style.display = 'none';
+            poemsPage.style.display = 'block';
+            
+            // Allow browser a frame to paint display:block
+            requestAnimationFrame(() => {
+              poemsPage.style.opacity = '1';
+              
+              // 4. Fade out the supernova overlay to reveal new page
+              supernova.style.opacity = '0';
+              setTimeout(() => {
+                supernova.classList.remove('explode');
+                supernova.style.display = 'none';
+                window.scrollTo(0, 0); // Reset scroll to top for poems page
+              }, 1500);
+            });
+          }, 1500); // Waits for supernova to reach peak brightness
+        }, 500); // Let balloon float up for half a sec before blast
+      });
+    });
+  </script>
+</body>
+</html>
